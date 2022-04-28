@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc
 import dash
-import dash_labs as dl
 from flask import Flask
 
 import os
@@ -12,28 +11,18 @@ if current_module_path not in sys.path:
 
 if __name__ == '__main__':
     requests_pathname_prefix=None
+    routes_pathname_prefix=None
 else:
     requests_pathname_prefix='/one/'
-
-# print('\nBefore App 1')
-# for page in dash.page_registry.values():
-#     print(page)
+    routes_pathname_prefix='/one/'
 
 server = Flask(__name__)
-app = Dash(__name__, server=server, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
-
-print('\nBefore App 1 register page', __name__)
-for page in dash.page_registry.values():
-    print(page)
+app = Dash(__name__, server=server, use_pages=True, requests_pathname_prefix=requests_pathname_prefix, routes_pathname_prefix=routes_pathname_prefix)
 
 dash.register_page(__name__+".another_home", layout=html.Div("App 1!"), path='/')
 dash.register_page(
     __name__+".very_important", layout=html.Div("Don't miss it! 1"), path="/important", order=0
 )
-
-print('\nAfter App 1')
-for page in dash.page_registry.values():
-    print(page)
 
 app.layout = html.Div(
     [
@@ -47,7 +36,7 @@ app.layout = html.Div(
                 if page["module"] != "pages.not_found_404"
             ]
         ),
-        dl.plugins.page_container,
+        dash.page_container,
     ]
 )
 

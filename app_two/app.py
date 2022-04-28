@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc
 import dash
-import dash_labs as dl
 from flask import Flask
 
 import os
@@ -12,29 +11,21 @@ if current_module_path not in sys.path:
 
 if __name__ == '__main__':
     requests_pathname_prefix=None
+    routes_pathname_prefix=None
 else:
     requests_pathname_prefix='/two/'
-
-print('\nBefore App 2', __name__)
-for page in dash.page_registry.values():
-    print(page)
+    routes_pathname_prefix='/two/'
 
 server = Flask(__name__)
-# When pluging itself, is removing the registered pages?
-app = Dash(__name__, server=server, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
-
-print('\nBefore App 2 register page')
-for page in dash.page_registry.values():
-    print(page)
+# app = Dash(__name__, server=server, use_pages=True, requests_pathname_prefix=requests_pathname_prefix)
+# On Dash 2.4.0rc3, cant use different flask server. 
+# The second app requires a different name, derived from routes_pathname_prefix
+app = Dash(__name__,  use_pages=True, requests_pathname_prefix=requests_pathname_prefix, routes_pathname_prefix=routes_pathname_prefix)
 
 dash.register_page(__name__+".another_home", layout=html.Div("App 2!"), path='/')
 dash.register_page(
     __name__+".very_important", layout=html.Div("Don't miss it! 2"), path="/important", order=0
 )
-
-print('\nAfter App 2')
-for page in dash.page_registry.values():
-    print(page)
 
 app.layout = html.Div(
     [
@@ -48,7 +39,7 @@ app.layout = html.Div(
                 if page["module"] != "pages.not_found_404"
             ]
         ),
-        dl.plugins.page_container,
+        dash.page_container,
     ]
 )
 
