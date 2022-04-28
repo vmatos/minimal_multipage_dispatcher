@@ -1,5 +1,4 @@
 flask
-dash
-dash-labs
+./dash-2.4.0rc3.tar.gz
 dash-extensions
 dash-bootstrap-components

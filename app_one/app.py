@@ -1,6 +1,5 @@
 from dash import Dash, html, dcc
 import dash
-import dash_labs as dl
 from flask import Flask
 
 if __name__ == '__main__':
@@ -9,11 +8,11 @@ else:
     requests_pathname_prefix='/one/'
 
 server = Flask(__name__)
-app = Dash(__name__, server=server, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
+app = Dash(__name__, server=server, use_pages=True, requests_pathname_prefix=requests_pathname_prefix)
 
-dash.register_page("another_home", layout=html.Div("App 1!"), path="/")
+dash.register_page(__name__+".another_home", layout=html.Div("App 1!"), path="/")
 dash.register_page(
-    "very_important", layout=html.Div("Don't miss it!"), path="/important", order=0
+    __name__+".very_important", layout=html.Div("Don't miss it!"), path="/important", order=0
 )
 
 app.layout = html.Div(
@@ -28,7 +27,7 @@ app.layout = html.Div(
                 if page["module"] != "pages.not_found_404"
             ]
         ),
-        dl.plugins.page_container,
+        dash.page_container,
     ]
 )
 
