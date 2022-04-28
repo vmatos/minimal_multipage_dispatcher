@@ -1,13 +1,15 @@
 from dash import Dash, html, dcc
 import dash
 import dash_labs as dl
+from flask import Flask
 
 if __name__ == '__main__':
     requests_pathname_prefix=None
 else:
     requests_pathname_prefix='/two/'
 
-app = Dash(__name__, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
+server = Flask(__name__)
+app = Dash(__name__, server=server, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
 
 dash.register_page("another_home", layout=html.Div("App 2!"), path="/")
 dash.register_page(
