@@ -15,13 +15,25 @@ if __name__ == '__main__':
 else:
     requests_pathname_prefix='/one/'
 
+# print('\nBefore App 1')
+# for page in dash.page_registry.values():
+#     print(page)
+
 server = Flask(__name__)
 app = Dash(__name__, server=server, plugins=[dl.plugins.pages], requests_pathname_prefix=requests_pathname_prefix)
 
-dash.register_page("another_home", layout=html.Div("App 1!"), path='/')
+print('\nBefore App 1 register page', __name__)
+for page in dash.page_registry.values():
+    print(page)
+
+dash.register_page(__name__+".another_home", layout=html.Div("App 1!"), path='/')
 dash.register_page(
-    "very_important", layout=html.Div("Don't miss it! 1"), path="/important", order=0
+    __name__+".very_important", layout=html.Div("Don't miss it! 1"), path="/important", order=0
 )
+
+print('\nAfter App 1')
+for page in dash.page_registry.values():
+    print(page)
 
 app.layout = html.Div(
     [
